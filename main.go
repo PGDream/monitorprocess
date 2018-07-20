@@ -7,6 +7,10 @@ import (
 	"log"
 )
 
+func init(){
+	log.SetPrefix("【main】")
+}
+
 func main() {
 	app := cli.NewApp()
 
@@ -32,6 +36,5 @@ func main() {
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatalln("获取参数异常,信息: ", err)
-		os.Exit(1)
 	}
 }

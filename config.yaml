@@ -1,6 +1,6 @@
 process:
-   - metadata:
-        processName: tomcat
-        processPort: 8000
-        startCmd: /home/mucang/app/tomcat/bin/catalina.sh start
-        startUser: mucang
+  - process_metadata:
+    process_name: "tomcat"
+    process_port: "8000"
+    start_cmd: "/home/mucang/app/tomcat/bin/catalina.sh start"
+    start_user: "mucang"

@@ -10,8 +10,7 @@ import (
 	"time"
 	"runtime"
 	"strings"
-	"flag"
-	"fmt"
+		"fmt"
 )
 
 var (
@@ -23,7 +22,6 @@ func init() {
 }
 
 func main() {
-	flag.Parse()
 	logFile, logErr := os.OpenFile(logFileName, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
 	defer logFile.Close()
 

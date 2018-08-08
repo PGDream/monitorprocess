@@ -26,3 +26,16 @@ func ExecShell(cmdInfo string) ([]byte, error) {
 	}
 	return outInfo, nil
 }
+
+func ExecCmd(cmdInfo string) string {
+	if cmdInfo == "" {
+		return ""
+	}
+	cmdObject := exec.Command("/bin/bash", "-c", cmdInfo)
+	outInfo, outErr := cmdObject.Output()
+	if outErr != nil {
+		log.Println("get exec shell out info failed, expection info: ", outErr)
+		return ""
+	}
+	return string(outInfo)
+}

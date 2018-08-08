@@ -10,6 +10,12 @@ import (
 	"time"
 	"runtime"
 	"strings"
+	"flag"
+	"fmt"
+)
+
+var (
+	logFileName = "process.log"
 )
 
 func init() {
@@ -17,11 +23,22 @@ func init() {
 }
 
 func main() {
-	app := cli.NewApp()
+	flag.Parse()
+	logFile, logErr := os.OpenFile(logFileName, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
+	defer logFile.Close()
 
+	if logErr != nil {
+		fmt.Println("Fail to find", *logFile, "process.log start Failed")
+		os.Exit(1)
+	}
+	log.SetOutput(logFile)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
+	app := cli.NewApp()
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "c",
+			Value: "config.yaml",
 			Usage: "请输入配置文件目录",
 		},
 	}

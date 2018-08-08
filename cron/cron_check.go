@@ -34,8 +34,8 @@ func handleProcess(processConfigInfo *monitor.ProcessConfigInfo) {
 	if pidProcessMap != nil {
 		for _, pidProcess := range (pidProcessMap) {
 			if pidProcess.PID == 0 {
-				info, _ := cmd.ExecShell(fmt.Sprintf(startProcess, pidProcess.StartUser, pidProcess.StartCmd))
-				log.Println(pidProcess.ProcessName + "----start info----" + string(info))
+				info := cmd.ExecCmd(fmt.Sprintf(startProcess, pidProcess.StartUser, pidProcess.StartCmd))
+				log.Println(pidProcess.ProcessName + "----start info----" + info)
 			}
 		}
 	}
@@ -60,8 +60,8 @@ func catchPIDProcess(processConfigInfo *monitor.ProcessConfigInfo) (processInfo 
 获取pid
  */
 func getPID(metadata *monitor.ProcessMetadata) int {
-	pid, err := cmd.ExecShell(fmt.Sprintf(checkPIDCmd, metadata.ProcessPort, metadata.StartUser))
-	if err != nil {
+	pid := cmd.ExecCmd(fmt.Sprintf(checkPIDCmd, metadata.ProcessPort, metadata.StartUser))
+	if pid =="" {
 		return 0
 	}
 	num, _ := strconv.Atoi(string(pid))

@@ -9,9 +9,9 @@ func init() {
 	log.SetPrefix("【exec-shell】")
 }
 
-func ExecShell(cmdInfo string) []byte {
+func ExecShell(cmdInfo string) ([]byte, error) {
 	if cmdInfo == "" {
-		return nil
+		return nil, nil
 	}
 	cmdObject := exec.Command("/bin/bash", "-c", cmdInfo)
 	outInfo, outErr := cmdObject.CombinedOutput()
@@ -21,7 +21,8 @@ func ExecShell(cmdInfo string) []byte {
 	}
 	*/
 	if outErr != nil {
-		log.Fatalln("get exec shell out info failed, expection info: ", outErr)
+		log.Println("get exec shell out info failed, expection info: ", outErr)
+		return nil, outErr
 	}
-	return outInfo
+	return outInfo, nil
 }

@@ -42,6 +42,7 @@ func main() {
 	if err != nil {
 		log.Fatalln("获取参数异常,信息: ", err)
 	}
+
 	// create daemon process
 	daemon(0, 1)
 	for {

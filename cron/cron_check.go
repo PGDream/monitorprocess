@@ -3,10 +3,10 @@ package cron
 import (
 	"github.com/PGDream/monitorprocess/monitor"
 	"log"
-	"os/exec"
 	"fmt"
 	"strconv"
 	"time"
+	"github.com/PGDream/monitorprocess/cmd"
 )
 
 const checkPIDCmd = "lsof -i:%s|grep %s|awk -F \" \" '{printf $2}'"
@@ -34,8 +34,8 @@ func handleProcess(processConfigInfo *monitor.ProcessConfigInfo) {
 	if pidProcessMap != nil {
 		for _, pidProcess := range (pidProcessMap) {
 			if pidProcess.PID == 0 {
-				info := exeCmd(fmt.Sprintf(startProcess, pidProcess.StartUser, pidProcess.StartCmd))
-				log.Println(pidProcess.ProcessName + "----start info----" + info)
+				info, _ := cmd.ExecShell(fmt.Sprintf(startProcess, pidProcess.StartUser, pidProcess.StartCmd))
+				log.Println(pidProcess.ProcessName + "----start info----" + string(info))
 			}
 		}
 	}
@@ -60,26 +60,10 @@ func catchPIDProcess(processConfigInfo *monitor.ProcessConfigInfo) (processInfo 
 获取pid
  */
 func getPID(metadata *monitor.ProcessMetadata) int {
-	pid := exeCmd(fmt.Sprintf(checkPIDCmd, metadata.ProcessPort, metadata.StartUser))
-	if pid == "" {
+	pid, err := cmd.ExecShell(fmt.Sprintf(checkPIDCmd, metadata.ProcessPort, metadata.StartUser))
+	if err != nil {
 		return 0
 	}
-	num, _ := strconv.Atoi(pid)
+	num, _ := strconv.Atoi(string(pid))
 	return num
-}
-
-/**
-exec cmd
- */
-func exeCmd(cmdInfo string) string {
-	log.Println("command info:", cmdInfo)
-	cmd := exec.Command("/bin/bash", "-c", cmdInfo)
-
-	out, err := cmd.Output()
-	if err != nil {
-		log.Println("command exec failer:", err)
-		return ""
-	}
-
-	return string(out)
 }

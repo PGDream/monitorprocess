@@ -14,6 +14,7 @@ type ProcessMetadata struct {
 	ProcessPort string `yaml:"process_port"`
 	StartCmd    string `yaml:"start_cmd"`
 	StartUser   string `startUser:"start_user"`
+	PID         int
 }
 
 func (processConfigInfo *ProcessConfigInfo) Tostring() string {

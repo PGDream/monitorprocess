@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 	"log"
+	"runtime"
 )
 
 func TestNewParseConfig(t *testing.T) {
@@ -12,4 +13,6 @@ func TestNewParseConfig(t *testing.T) {
 	}
 	processInfo := parseConfig.Parse()
 	log.Println(processInfo.Tostring())
+
+	log.Println(runtime.GOOS)
 }

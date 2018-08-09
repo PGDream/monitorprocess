@@ -27,33 +27,24 @@ func cron(processConfigInfo *monitor.ProcessConfigInfo) {
 }
 
 /**
-处理process
- */
-func handleProcess(processConfigInfo *monitor.ProcessConfigInfo) {
-	pidProcessMap := catchPIDProcess(processConfigInfo)
-	if pidProcessMap != nil {
-		for _, pidProcess := range (pidProcessMap) {
-			if pidProcess.PID == 0 {
-				info := cmd.ExecCmd(fmt.Sprintf(startProcess, pidProcess.StartUser, pidProcess.StartCmd))
-				log.Println(pidProcess.ProcessName + "----start info----" + info)
-			}
-		}
-	}
-}
-
-/**
  catch PID，返回值为uint，默认值为0
  */
-func catchPIDProcess(processConfigInfo *monitor.ProcessConfigInfo) (processInfo map[string]*monitor.ProcessMetadata) {
-	if len(processConfigInfo.Process) <= 0 {
-		return nil
+func handleProcess(processConfigInfo *monitor.ProcessConfigInfo) {
+	if processConfigInfo == nil || len(processConfigInfo.Process) <= 0 {
+		log.Println("ProcessConfiginfo object is nil")
+		return
 	}
-	pids := make(map[string]*monitor.ProcessMetadata, len(processConfigInfo.Process))
 	for _, process := range (processConfigInfo.Process) {
 		process.PID = getPID(&process)
-		pids[process.ProcessName] = &process
+
+		func(process *monitor.ProcessMetadata) {
+			if process.PID == 0 {
+				info := cmd.ExecCmd(fmt.Sprintf(startProcess, process.StartUser, process.StartCmd))
+				log.Println(process.ProcessName + "----start info----" + info)
+
+			}
+		}(&process)
 	}
-	return pids
 }
 
 /**
@@ -61,7 +52,7 @@ func catchPIDProcess(processConfigInfo *monitor.ProcessConfigInfo) (processInfo 
  */
 func getPID(metadata *monitor.ProcessMetadata) int {
 	pid := cmd.ExecCmd(fmt.Sprintf(checkPIDCmd, metadata.ProcessPort, metadata.StartUser))
-	if pid =="" {
+	if pid == "" {
 		return 0
 	}
 	num, _ := strconv.Atoi(string(pid))
